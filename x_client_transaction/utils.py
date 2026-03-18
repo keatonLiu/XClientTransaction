@@ -54,11 +54,12 @@ def get_migration_form(response: bs4.BeautifulSoup):
 
 
 def get_ondemand_file_url(response: bs4.BeautifulSoup):
-    file_url = None
-    on_demand_file = ON_DEMAND_FILE_REGEX.search(str(response))
-    if on_demand_file:
-        filename = on_demand_file.group(1)
-        file_url = ON_DEMAND_FILE_URL.format(filename=filename)
+    on_demand_file_index = ON_DEMAND_FILE_REGEX.search(str(response)).group(1)
+    regex = re.compile(
+        rf',{on_demand_file_index}:\"(?!.*ondemand\.s)(.*?)\"'
+    )
+    filename = regex.search(str(response)).group(1)
+    file_url = ON_DEMAND_FILE_URL.format(filename=filename)
     return file_url
 
 
